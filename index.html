@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+    }
+    .countdown {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      font: bold 30px 'Gothic A1', sans-serif;
+      text-align: center;
+    }
+    .countdown--block {
+      padding: 1rem;
+      height: 6rem;
+      width: 50%;
+    }
+    #day {
+      background-color: rgb(15, 76, 129);
+    }
+    #day::after {
+      display: block;
+      font-size: 20px;
+      content: '일';
+    }
+    #hour {
+      background-color: rgb(242, 107, 91);
+    }
+    #hour::after {
+      display: block;
+      font-size: 20px;
+      content: '시간';
+    }
+    #minute {
+      background-color: rgb(241, 238, 230);
+    }
+    #minute::after {
+      display: block;
+      font-size: 20px;
+      content: '분';
+    }
+    #second {
+      background-color: rgb(219, 203, 190);
+    }
+    #second::after {
+      display: block;
+      font-size: 20px;
+      content: '초';
+    }
+    .end {
+      display: block;
+      height: 5rem;
+      line-height: 5rem;
+      color: rgb(241, 238, 230);
+      background-color: rgb(55, 56, 56);
+    }
+  </style>
+</head>
+<body>
+<div class="countdown">
+  <div id="day" class="countdown--block"></div>
+  <div id="hour" class="countdown--block"></div>
+  <div id="minute" class="countdown--block"></div> 
+  <div id="second" class="countdown--block"></div> 
+</div>
+
+</body>
+<script>
+  const params = new URLSearchParams(window.location.search)
+  const date = params.get('date')
+  const time = (params.get('h') || '00') + ':' + (params.get('m') || '00')
+  const datetime = new Date(`${date} ${time}`)
+  const makediv = function(dom, value) {
+    if (value > 0) {
+      dom.style.display = 'block'
+      dom.innerText = value
+    } else {
+      dom.style.display = 'none'
+    }
+  }
+  const timer = setInterval(function() {
+    const today = new Date().getTime()
+    const diff = datetime - today
+    if (diff > 0) {
+      const day = Math.floor(diff / (1000 * 60 * 60 * 24))
+      const hour = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+      const minute = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
+      const second = Math.floor((diff % (1000 * 60)) / 1000)
+      makediv(document.querySelector("#day"), day)
+      makediv(document.querySelector("#hour"), hour)
+      document.querySelector("#minute").innerText = minute
+      document.querySelector("#second").innerText = second
+    } else {
+      const countdown = document.querySelector(".countdown")
+      countdown.innerText = 'THE END'
+      countdown.classList.add('end')
+    }
+  }, 1);
+</script>
+</html>
